@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}ML Detection | OmniStock{% endblock %}{% block page_name %}ML Detection{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">INTELLIGENCE</p><h1>Anomaly detection</h1><p class="muted">Review unusual changes in inventory movement data.</p></div><span class="pill {% if ml_available %}good{% else %}warning{% endif %}">{% if ml_available %}ML library ready{% else %}Rule-based fallback{% endif %}</span></div>
+<div class="stats-grid three"><div class="stat-card"><div class="stat-top">Flagged movements</div><strong>{{ anomaly_count }}</strong><small>Potential anomalies to review</small></div><div class="stat-card"><div class="stat-top">Low-stock products</div><strong>{{ low_count }}</strong><small>At or below reorder level</small></div><div class="stat-card"><div class="stat-top">Records analysed</div><strong>{{ movements|length }}</strong><small>Recent stock movements</small></div></div>
+<div class="info-banner"><div class="banner-icon">✦</div><div><b>Detection method</b><p>{{ model_message }} This is a student prototype, not a production fraud or forecasting system.</p></div></div>
+<div class="panel"><div class="panel-head"><div><h2>Movement analysis</h2><p class="muted">Flagged rows should be checked by a staff member.</p></div></div><div class="table-wrap"><table><thead><tr><th>PRODUCT</th><th>SKU</th><th>STOCK CHANGE</th><th>REASON</th><th>DATE</th><th>ML RESULT</th></tr></thead><tbody>
+{% for m in movements %}<tr><td><b>{{ m.name }}</b></td><td>{{ m.sku }}</td><td class="{% if m.change < 0 %}negative{% else %}positive{% endif %}">{{ "%+d"|format(m.change) }}</td><td>{{ m.reason }}</td><td>{{ m.date }}</td><td>{% if m.anomaly %}<span class="pill danger">Review anomaly</span>{% else %}<span class="pill good">Normal</span>{% endif %}</td></tr>{% else %}<tr><td colspan="6">No movement data available.</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% endblock %}

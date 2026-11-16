@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% block title %}Dashboard | OmniStock{% endblock %}{% block page_name %}Dashboard{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">OVERVIEW</p><h1>Inventory dashboard</h1><p class="muted">Monitor stock and orders across your sales channels.</p></div><a class="btn primary" href="{{ url_for('products') }}">＋ Add product</a></div>
+<div class="stats-grid">
+  <div class="stat-card"><div class="stat-top">Total products <span class="stat-icon purple">▤</span></div><strong>{{ stats.products }}</strong><small>Unique SKUs</small></div>
+  <div class="stat-card"><div class="stat-top">Units in stock <span class="stat-icon blue">▦</span></div><strong>{{ stats.units }}</strong><small>Across all products</small></div>
+  <div class="stat-card"><div class="stat-top">Total orders <span class="stat-icon green">⇄</span></div><strong>{{ stats.orders }}</strong><small>Orders recorded</small></div>
+  <div class="stat-card"><div class="stat-top">Stock alerts <span class="stat-icon orange">♧</span></div><strong>{{ stats.alerts }}</strong><small>At or below reorder level</small></div>
+</div>
+<div class="two-col">
+ <div class="panel"><div class="panel-head"><div><h2>Stock overview</h2><p class="muted">Products with the lowest available quantity</p></div><a href="{{ url_for('products') }}">View inventory →</a></div>
+ <div class="table-wrap"><table><thead><tr><th>PRODUCT</th><th>SKU</th><th>STOCK</th><th>STATUS</th></tr></thead><tbody>
+ {% for p in products %}<tr><td><b>{{ p.name }}</b><small class="sub">{{ p.category }}</small></td><td>{{ p.sku }}</td><td><b>{{ p.quantity }}</b></td><td>{% if p.quantity <= p.reorder_level %}<span class="pill danger">Low stock</span>{% else %}<span class="pill good">In stock</span>{% endif %}</td></tr>{% else %}<tr><td colspan="4">No products yet.</td></tr>{% endfor %}
+ </tbody></table></div></div>
+ <div class="panel"><div class="panel-head"><div><h2>Recent orders</h2><p class="muted">Latest customer orders</p></div><a href="{{ url_for('orders') }}">All orders →</a></div>
+ {% for o in recent_orders %}<div class="order-line"><div class="order-symbol">↗</div><div class="grow"><b>{{ o.product_name }}</b><small>{{ o.customer }} · {{ o.channel }}</small></div><b>{{ o.quantity }} units</b></div>{% else %}<p class="empty">No orders have been placed yet.</p>{% endfor %}
+ </div>
+</div>
+<div class="info-banner"><div class="banner-icon">✦</div><div><b>Smart inventory monitoring</b><p>Use ML Detection to review unusual stock movements and Alerts to identify products that need restocking.</p></div><a href="{{ url_for('ml_detection') }}">Open ML Detection →</a></div>
+{% endblock %}

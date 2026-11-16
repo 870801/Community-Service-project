@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% block title %}Inventory | OmniStock{% endblock %}{% block page_name %}Inventory{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">CATALOGUE</p><h1>Inventory management</h1><p class="muted">Add products and adjust stock quantities.</p></div></div>
+<div class="panel form-panel"><div class="panel-head"><div><h2>Add a product</h2><p class="muted">Enter product details below.</p></div></div>
+<form method="post" class="form-grid">
+ <label>SKU<input name="sku" placeholder="SKU-1006" required></label><label>Product name<input name="name" placeholder="Product name" required></label>
+ <label>Category<input name="category" placeholder="Electronics"></label><label>Sales channel<select name="channel"><option>All channels</option><option>Website</option><option>Amazon</option><option>Flipkart</option><option>Retail store</option></select></label>
+ <label>Opening quantity<input type="number" name="quantity" min="0" value="0" required></label><label>Reorder level<input type="number" name="reorder_level" min="0" value="5" required></label>
+ <label>Unit price (₹)<input type="number" name="price" min="0" step="0.01" value="0" required></label><div class="form-action"><button class="btn primary">Save product</button></div>
+</form></div>
+<div class="panel"><div class="panel-head"><div><h2>All products</h2><p class="muted">{{ products|length }} products in catalogue</p></div><input class="search" id="tableSearch" placeholder="Search products..."></div>
+<div class="table-wrap"><table id="productsTable"><thead><tr><th>PRODUCT</th><th>SKU</th><th>CHANNEL</th><th>QUANTITY</th><th>REORDER AT</th><th>PRICE</th><th>ADJUST STOCK</th></tr></thead><tbody>
+{% for p in products %}<tr><td><b>{{ p.name }}</b><small class="sub">{{ p.category }}</small></td><td>{{ p.sku }}</td><td>{{ p.channel }}</td><td>{% if p.quantity <= p.reorder_level %}<span class="pill danger">{{ p.quantity }} low</span>{% else %}<span class="pill good">{{ p.quantity }}</span>{% endif %}</td><td>{{ p.reorder_level }}</td><td>₹{{ "%.2f"|format(p.price) }}</td><td><form class="adjust-form" method="post" action="{{ url_for('adjust_stock', product_id=p.id) }}"><input name="change" type="number" placeholder="+/-" required><input name="reason" placeholder="Reason"><button class="btn small">Update</button></form></td></tr>{% else %}<tr><td colspan="7">No products found.</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% endblock %}

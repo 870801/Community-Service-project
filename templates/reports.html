@@ -1,0 +1,6 @@
+{% extends "base.html" %}{% block title %}Reports | OmniStock{% endblock %}{% block page_name %}Reports{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">BUSINESS INSIGHTS</p><h1>Inventory reports</h1><p class="muted">A summary of stock value grouped by category.</p></div></div>
+<div class="stats-grid"><div class="stat-card"><div class="stat-top">Total inventory value</div><strong>₹{{ "%.2f"|format(total_value) }}</strong><small>Quantity × unit price</small></div><div class="stat-card"><div class="stat-top">Categories</div><strong>{{ rows|length }}</strong><small>Product categories</small></div></div>
+<div class="panel"><div class="panel-head"><div><h2>Category summary</h2><p class="muted">Current inventory by product category</p></div></div><div class="table-wrap"><table><thead><tr><th>CATEGORY</th><th>PRODUCT COUNT</th><th>UNITS IN STOCK</th><th>STOCK VALUE</th></tr></thead><tbody>{% for r in rows %}<tr><td><b>{{ r.category }}</b></td><td>{{ r.products }}</td><td>{{ r.units }}</td><td>₹{{ "%.2f"|format(r.value or 0) }}</td></tr>{% else %}<tr><td colspan="4">No report data.</td></tr>{% endfor %}</tbody></table></div></div>
+{% endblock %}

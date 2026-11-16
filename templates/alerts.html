@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block title %}Alerts | OmniStock{% endblock %}{% block page_name %}Alerts{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">ATTENTION REQUIRED</p><h1>Inventory alerts</h1><p class="muted">Products that have reached their reorder threshold.</p></div></div>
+<div class="panel"><div class="panel-head"><div><h2>Low-stock products</h2><p class="muted">{{ low_stock|length }} products need attention</p></div><span class="pill {% if low_stock %}danger{% else %}good{% endif %}">{{ low_stock|length }} alerts</span></div>
+<div class="table-wrap"><table><thead><tr><th>PRODUCT</th><th>SKU</th><th>AVAILABLE</th><th>REORDER LEVEL</th><th>CHANNEL</th><th>ACTION</th></tr></thead><tbody>
+{% for p in low_stock %}<tr><td><b>{{ p.name }}</b></td><td>{{ p.sku }}</td><td><span class="pill danger">{{ p.quantity }} units</span></td><td>{{ p.reorder_level }}</td><td>{{ p.channel }}</td><td><a href="{{ url_for('products') }}">Update stock →</a></td></tr>{% else %}<tr><td colspan="6" class="empty">Great! No low-stock alerts.</td></tr>{% endfor %}
+</tbody></table></div></div>
+<div class="panel"><div class="panel-head"><div><h2>Recent stock movements</h2><p class="muted">Audit trail of inventory changes</p></div></div><div class="table-wrap"><table><thead><tr><th>PRODUCT</th><th>CHANGE</th><th>REASON</th><th>DATE</th></tr></thead><tbody>
+{% for m in movements %}<tr><td><b>{{ m.product_name }}</b><small class="sub">{{ m.sku }}</small></td><td class="{% if m.change_amount < 0 %}negative{% else %}positive{% endif %}">{{ "%+d"|format(m.change_amount) }}</td><td>{{ m.reason }}</td><td>{{ m.created_at }}</td></tr>{% else %}<tr><td colspan="4">No stock movements recorded.</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% endblock %}

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}OmniStock{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-icon">O</span><div><b>OmniStock</b><small>Inventory control</small></div></div>
+    <div class="nav-label">WORKSPACE</div>
+    <nav>
+      <a href="{{ url_for('dashboard') }}" class="{% if request.endpoint=='dashboard' %}active{% endif %}">▦ <span>Dashboard</span></a>
+      <a href="{{ url_for('products') }}" class="{% if request.endpoint=='products' %}active{% endif %}">▤ <span>Inventory</span></a>
+      <a href="{{ url_for('orders') }}" class="{% if request.endpoint=='orders' %}active{% endif %}">⇄ <span>Orders</span></a>
+      <a href="{{ url_for('ml_detection') }}" class="{% if request.endpoint=='ml_detection' %}active{% endif %}">⌁ <span>ML Detection</span></a>
+      <a href="{{ url_for('alerts') }}" class="{% if request.endpoint=='alerts' %}active{% endif %}">♧ <span>Alerts</span></a>
+      <a href="{{ url_for('reports') }}" class="{% if request.endpoint=='reports' %}active{% endif %}">▥ <span>Reports</span></a>
+    </nav>
+    <div class="sidebar-bottom"><div class="status-dot"></div> System running <small>Local development</small></div>
+  </aside>
+  <main class="main">
+    <header class="topbar"><div><span class="crumb">Workspace /</span> <b>{% block page_name %}Dashboard{% endblock %}</b></div><div class="profile"><span class="avatar">VS</span><span>Admin</span></div></header>
+    <section class="content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}{% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}{% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+      <footer>OmniStock · B.Tech Project Prototype · Local demo</footer>
+    </section>
+  </main>
+</div>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body></html>

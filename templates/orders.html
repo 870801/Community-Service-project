@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block title %}Orders | OmniStock{% endblock %}{% block page_name %}Orders{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">FULFILMENT</p><h1>Order management</h1><p class="muted">Create an order and automatically deduct stock.</p></div></div>
+<div class="panel form-panel"><div class="panel-head"><div><h2>Create new order</h2><p class="muted">The system checks available stock before confirming.</p></div></div>
+<form method="post" class="form-grid">
+<label>Product<select name="product_id" required>{% for p in products %}<option value="{{ p.id }}">{{ p.name }} — {{ p.quantity }} available</option>{% endfor %}</select></label>
+<label>Quantity<input name="quantity" type="number" min="1" value="1" required></label><label>Customer name<input name="customer" placeholder="Customer name" required></label>
+<label>Order channel<select name="channel"><option>Website</option><option>Amazon</option><option>Flipkart</option><option>Retail store</option></select></label><div class="form-action"><button class="btn primary">＋ Place order</button></div>
+</form></div>
+<div class="panel"><div class="panel-head"><div><h2>Order history</h2><p class="muted">{{ orders|length }} orders recorded</p></div></div><div class="table-wrap"><table><thead><tr><th>ORDER</th><th>PRODUCT</th><th>CUSTOMER</th><th>CHANNEL</th><th>QTY</th><th>STATUS</th><th>DATE</th></tr></thead><tbody>
+{% for o in orders %}<tr><td>#{{ o.id }}</td><td><b>{{ o.product_name }}</b><small class="sub">{{ o.sku }}</small></td><td>{{ o.customer }}</td><td>{{ o.channel }}</td><td>{{ o.quantity }}</td><td><span class="pill good">{{ o.status }}</span></td><td>{{ o.created_at }}</td></tr>{% else %}<tr><td colspan="7">No orders yet. Create your first order above.</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% endblock %}
